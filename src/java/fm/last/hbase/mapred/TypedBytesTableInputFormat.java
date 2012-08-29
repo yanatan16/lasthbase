@@ -110,9 +110,14 @@ public class TypedBytesTableInputFormat implements InputFormat<TypedBytesWritabl
       for (int i = 0; i < len; i++) {
         String col = new String(oldFormat[i]);
         String[] split = col.split(":");
-        byte[] fam = split[0].getBytes();
-        byte[] qual = split[1].getBytes();
-        scan.addColumn(fam, qual);
+        if split.length >= 2 {
+          byte[] fam = split[0].getBytes();
+          byte[] qual = split[1].getBytes();
+          scan.addColumn(fam, qual);
+        } else {
+          byte[] fam = split[0].getBytes();
+          scan.addFamily(fam);
+        }
       }
     }
 
